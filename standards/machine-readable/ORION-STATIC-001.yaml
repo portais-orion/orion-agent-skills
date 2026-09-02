@@ -1,0 +1,10 @@
+schema_version: 1
+id: ORION-STATIC-001
+title: Validar dados e saídas de ferramenta estática antes de publicar
+category: frontend
+level: CONTEXTUAL
+severity: MEDIUM
+applies_when: [site estático dirigido por dados]
+detect: { automatic: PARTIAL, detector: static-data-url-export-policy }
+exceptions: { allowed: true, requires_adr: false, expiry_required: false }
+references: [https://owasp.org/www-project-application-security-verification-standard/]

@@ -1,0 +1,10 @@
+schema_version: 1
+id: ORION-DX-001
+title: Oferecer navegação progressiva e checks executáveis
+category: engineering_experience
+level: RECOMMENDED
+severity: LOW
+applies_when: [repositório mantido]
+detect: { automatic: PARTIAL, detector: onboarding-check-inventory }
+exceptions: { allowed: true, requires_adr: false, expiry_required: false }
+references: [Nucleo Portais]

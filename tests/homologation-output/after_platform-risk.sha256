@@ -1,0 +1,3 @@
+2c8affc23aebb26f8a3d6b50f92db35f89093ff291ace49f6774da554ccb0d5b  platform-risk/.github/workflows/deploy.yml
+32ab48518178882fa4a0a2bd6180d4bab73135600eff3ad89c44949cd4d693c3  platform-risk/docker-compose.yml
+47ff61a45354ed36820025418a5d842e53da1a318f8aaeed341ad99c9bc34471  platform-risk/Dockerfile

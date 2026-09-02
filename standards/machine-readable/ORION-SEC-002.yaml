@@ -1,0 +1,10 @@
+schema_version: 1
+id: ORION-SEC-002
+title: Proibir segredo previsível, fallback produtivo e bypass global de transporte seguro
+category: security
+level: REQUIRED
+severity: CRITICAL
+applies_when: [configuração, autenticação, aplicativo mobile]
+detect: { automatic: YES, detector: secret-config-mobile-policy }
+exceptions: { allowed: true, requires_adr: true, expiry_required: true }
+references: [https://csrc.nist.gov/pubs/sp/800/218/final]

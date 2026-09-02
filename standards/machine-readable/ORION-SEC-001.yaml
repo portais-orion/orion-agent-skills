@@ -1,0 +1,10 @@
+schema_version: 1
+id: ORION-SEC-001
+title: Autorizar acesso a recursos e validar entradas não confiáveis
+category: security
+level: REQUIRED
+severity: HIGH
+applies_when: [API, recurso privado, dado por tenant]
+detect: { automatic: PARTIAL, detector: route-schema-and-tenant-contract-audit }
+exceptions: { allowed: true, requires_adr: true, expiry_required: true }
+references: [https://owasp.org/www-project-application-security-verification-standard/]

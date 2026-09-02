@@ -1,0 +1,10 @@
+schema_version: 1
+id: ORION-UI-001
+title: Construir UI compartilhada com tokens semânticos e limites de camada
+category: frontend
+level: RECOMMENDED
+severity: MEDIUM
+applies_when: [frontend, biblioteca de componentes]
+detect: { automatic: PARTIAL, detector: ui-purity-token-policy }
+exceptions: { allowed: true, requires_adr: false, expiry_required: false }
+references: [Nucleo Portais]

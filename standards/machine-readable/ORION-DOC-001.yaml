@@ -1,0 +1,10 @@
+schema_version: 1
+id: ORION-DOC-001
+title: Manter documentação operacional e ownership junto do repositório
+category: engineering_experience
+level: RECOMMENDED
+severity: MEDIUM
+applies_when: [repositório mantido]
+detect: { automatic: PARTIAL, detector: documentation-ownership-inventory }
+exceptions: { allowed: true, requires_adr: false, expiry_required: false }
+references: [https://csrc.nist.gov/pubs/sp/800/218/final]

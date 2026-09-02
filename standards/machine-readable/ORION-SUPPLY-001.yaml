@@ -1,0 +1,10 @@
+schema_version: 1
+id: ORION-SUPPLY-001
+title: Usar dependências de entrega imutáveis e registrar proveniência
+category: platform
+level: RECOMMENDED
+severity: MEDIUM
+applies_when: [CI/CD, imagem container, publicação de pacote]
+detect: { automatic: YES, detector: immutable-action-image-policy }
+exceptions: { allowed: true, requires_adr: false, expiry_required: false }
+references: [https://slsa.dev/spec/v1.0/]

@@ -1,0 +1,10 @@
+schema_version: 1
+id: ORION-OBS-001
+title: Instrumentar serviço com logs, métricas, traces e health significativo
+category: observability
+level: RECOMMENDED
+severity: MEDIUM
+applies_when: [serviço de produção]
+detect: { automatic: PARTIAL, detector: telemetry-health-inventory }
+exceptions: { allowed: true, requires_adr: false, expiry_required: false }
+references: [https://opentelemetry.io/docs/]

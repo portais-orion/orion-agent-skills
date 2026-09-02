@@ -1,0 +1,311 @@
+{
+  "baselineSource": "ORION ENGINEERING AUDIT — BASELINE 2026-09",
+  "executedAt": "2026-09-02",
+  "executionMethod": "Aplicação direta e determinística do contrato descrito em cada SKILL.md (audit-orion-codebase e os 7 auditores), dentro desta sessão — NÃO por um processo independente de agente Claude Code ou Codex (ambos indisponíveis neste ambiente, ver runtimeCompatibility).",
+  "scenarios": [
+    {
+      "id": "security",
+      "label": "Cenário A — Security",
+      "fixture": "tests/fixtures/backend-api",
+      "language": "pt-BR",
+      "git": {
+        "before": "",
+        "after": ""
+      },
+      "profile": "backend-api",
+      "selectedAuditors": [
+        "orion-architecture",
+        "orion-quality",
+        "orion-security",
+        "orion-observability",
+        "orion-platform",
+        "orion-engineering-experience"
+      ],
+      "loadedStandards": [
+        "ORION-SEC-001",
+        "ORION-SEC-002",
+        "ORION-API-001"
+      ],
+      "findings": [
+        {
+          "id": "APPX-SEC-001",
+          "standardId": "ORION-SEC-001",
+          "system": "fixture-backend-api",
+          "category": "security",
+          "severity": "HIGH",
+          "priority": "P1",
+          "effort": "S",
+          "confidence": "HIGH",
+          "classification": "VERIFIED",
+          "evidence": [
+            {
+              "path": "src/routes/invoices.js",
+              "lines": "2-4"
+            }
+          ],
+          "problem": "getInvoice busca fatura por db.invoice.findUnique({ where: { id: req.params.id } }) sem aplicar predicate de tenant nem checar papel/sessão do requisitante.",
+          "impact": "Qualquer requisitante autenticado (ou não, dependendo do middleware upstream) pode ler fatura de outro tenant apenas conhecendo o ID — IDOR/bypass de escopo, exatamente o padrão coberto por ORION-SEC-001.",
+          "recommendation": "Aplicar schema de ingresso e obter tenantId/papel da sessão; consultar com findFirst({ where: { id, tenantId } }) e negar quando o papel não autorizar o recurso, antes de qualquer leitura.",
+          "automaticDetection": "PARTIAL",
+          "relatedFindingIds": []
+        }
+      ]
+    },
+    {
+      "id": "backendOnly",
+      "label": "Cenário B — Backend only",
+      "fixture": "tests/fixtures/backend-api",
+      "language": "pt-BR",
+      "git": {
+        "before": "",
+        "after": ""
+      },
+      "profile": "backend-api",
+      "auditorDisposition": {
+        "orion-architecture": "RUN",
+        "orion-quality": "RUN",
+        "orion-security": "RUN",
+        "orion-observability": "RUN",
+        "orion-platform": "RUN",
+        "orion-frontend": "N/A",
+        "orion-engineering-experience": "RUN"
+      },
+      "reason": "fixture não contém UI cliente (sem package.json de framework de UI, sem diretório de componentes/páginas) — orion-frontend marcado N/A pela Tabela de Dispatch do profile backend-api."
+    },
+    {
+      "id": "platform",
+      "label": "Cenário C — Platform",
+      "fixture": "tests/fixtures/platform-risk",
+      "language": "pt-BR",
+      "git": {
+        "before": "",
+        "after": ""
+      },
+      "profile": "backend-api",
+      "selectedAuditors": [
+        "orion-platform"
+      ],
+      "loadedStandards": [
+        "ORION-DOCKER-001",
+        "ORION-CI-001"
+      ],
+      "findings": [
+        {
+          "id": "APPX-PLAT-001",
+          "standardId": "ORION-DOCKER-001",
+          "system": "fixture-platform-risk",
+          "category": "platform",
+          "severity": "MEDIUM",
+          "priority": "P2",
+          "effort": "S",
+          "confidence": "HIGH",
+          "classification": "VERIFIED",
+          "evidence": [
+            {
+              "path": "Dockerfile",
+              "lines": "1"
+            },
+            {
+              "path": "docker-compose.yml",
+              "lines": "3"
+            }
+          ],
+          "problem": "Dockerfile usa tag `node:latest` e docker-compose.yml usa `postgres:latest` — nenhuma imagem base é fixada por versão/digest.",
+          "impact": "Build não reprodutível; uma atualização upstream da tag latest pode quebrar produção sem mudança de código rastreável.",
+          "recommendation": "Fixar cada imagem base por versão explícita ou digest SHA imutável (ex.: node:22.13.0, postgres:16.4).",
+          "automaticDetection": "YES",
+          "relatedFindingIds": []
+        },
+        {
+          "id": "APPX-PLAT-002",
+          "standardId": "ORION-DOCKER-001",
+          "system": "fixture-platform-risk",
+          "category": "platform",
+          "severity": "MEDIUM",
+          "priority": "P2",
+          "effort": "XS",
+          "confidence": "HIGH",
+          "classification": "VERIFIED",
+          "evidence": [
+            {
+              "path": "docker-compose.yml",
+              "lines": "4"
+            }
+          ],
+          "problem": "docker-compose.yml publica a porta 5432 do Postgres diretamente no host (\"5432:5432\").",
+          "impact": "Dependência de dados fica alcançável fora da rede interna dos containers quando o host está exposto — não prova reachability externa real, mas é o padrão incorreto documentado em ORION-DOCKER-001.",
+          "recommendation": "Remover o mapeamento de porta pública do serviço de banco; expor somente via rede interna do Compose, ou usar bind em 127.0.0.1 quando acesso local for necessário.",
+          "automaticDetection": "YES",
+          "relatedFindingIds": []
+        },
+        {
+          "id": "APPX-CI-001",
+          "standardId": "ORION-CI-001",
+          "system": "fixture-platform-risk",
+          "category": "platform",
+          "severity": "HIGH",
+          "priority": "P1",
+          "effort": "M",
+          "confidence": "HIGH",
+          "classification": "VERIFIED",
+          "evidence": [
+            {
+              "path": ".github/workflows/deploy.yml",
+              "lines": "1-7"
+            }
+          ],
+          "problem": "Workflow de deploy roda em push direto (`on: push`) sem depender de nenhum job de CI (lint/typecheck/test/scan) — o step `deploy-now` é o único passo, sem gate anterior.",
+          "impact": "Mudança sem qualquer verificação automatizada chega a deploy; nenhum bloqueio reprodutível contra regressão, segredo vazado ou dependência vulnerável.",
+          "recommendation": "Adicionar workflow de CI com install congelado, lint, typecheck, testes e secret scan; fazer o deploy depender do sucesso desse workflow via workflow_run ou needs.",
+          "automaticDetection": "YES",
+          "relatedFindingIds": []
+        }
+      ]
+    },
+    {
+      "id": "conformant",
+      "label": "Cenário D — Conforme",
+      "fixture": "tests/fixtures/conformant-api",
+      "language": "pt-BR",
+      "git": {
+        "before": "",
+        "after": ""
+      },
+      "profile": "backend-api",
+      "selectedAuditors": [
+        "orion-security"
+      ],
+      "loadedStandards": [
+        "ORION-SEC-001"
+      ],
+      "findings": [],
+      "limitations": [
+        "Análise estática não comprova que req.auth é populado corretamente por middleware upstream fora deste arquivo — classificação RUNTIME VALIDATION REQUIRED se essa dependência não estiver no mesmo repositório; não gerada como finding porque não há evidência de falha."
+      ]
+    },
+    {
+      "id": "deduplication",
+      "label": "Cenário E — Deduplicação",
+      "fixture": "tests/fixtures/dedup-risk",
+      "language": "pt-BR",
+      "git": {
+        "before": "",
+        "after": ""
+      },
+      "profile": "backend-api",
+      "selectedAuditors": [
+        "orion-security",
+        "orion-platform"
+      ],
+      "loadedStandards": [
+        "ORION-SEC-002",
+        "ORION-DOCKER-001"
+      ],
+      "findings": [
+        {
+          "id": "APPX-SEC-002",
+          "standardId": "ORION-SEC-002",
+          "system": "fixture-dedup-risk",
+          "category": "security",
+          "severity": "HIGH",
+          "priority": "P1",
+          "effort": "S",
+          "confidence": "HIGH",
+          "classification": "VERIFIED",
+          "evidence": [
+            {
+              "path": "docker-compose.yml",
+              "lines": "2-4"
+            }
+          ],
+          "problem": "Serviço administrativo (\"admin\") publica a porta 9000 diretamente no host sem qualquer configuração de rede restrita ou camada de autenticação visível no manifesto.",
+          "impact": "Porta administrativa alcançável fora da rede interna do Compose sempre que o host estiver exposto — mesma causa raiz detectada tanto pela ótica de segurança (bypass de transporte/acesso privilegiado, ORION-SEC-002) quanto pela ótica de plataforma (binding de porta incorreto, ORION-DOCKER-001).",
+          "recommendation": "Remover o mapeamento de porta pública do serviço admin; expor apenas via rede interna ou atrás de proxy autenticado quando acesso externo for necessário.",
+          "automaticDetection": "YES",
+          "relatedFindingIds": []
+        }
+      ],
+      "consolidatedReferences": [
+        {
+          "auditor": "orion-security",
+          "findingId": "APPX-SEC-002",
+          "note": "orion-security é o owner do finding principal. orion-platform detectou o mesmo binding de porta (docker-compose.yml:2-4) de forma independente e, na deduplicação, referenciou este mesmo ID em vez de criar um segundo finding — mesma causa raiz, mesmo efeito, mesma evidência."
+        }
+      ]
+    },
+    {
+      "id": "readOnly",
+      "label": "Cenário F — Read only",
+      "fixture": "todas as fixtures acima",
+      "language": "pt-BR",
+      "git": {
+        "before": "",
+        "after": ""
+      },
+      "proof": "sha256sum de todos os arquivos de cada fixture, antes e depois da execução dos cenários A-E: árvores idênticas em todas as 6 fixtures (ver before_*.sha256 / after_*.sha256)."
+    },
+    {
+      "id": "applicability",
+      "label": "Cenário G — Aplicabilidade",
+      "fixture": "tests/fixtures/backend-api, tests/fixtures/mobile-app-demo, tests/fixtures/static-tool-demo",
+      "language": "pt-BR",
+      "git": {
+        "before": "",
+        "after": ""
+      },
+      "perProfile": {
+        "backend-api": {
+          "profile": "backend-api",
+          "selectedAuditors": [
+            "orion-architecture",
+            "orion-quality",
+            "orion-security",
+            "orion-observability",
+            "orion-platform",
+            "orion-engineering-experience"
+          ],
+          "auditorDisposition": {
+            "orion-frontend": "N/A"
+          }
+        },
+        "mobile-app-demo": {
+          "profile": "mobile-app",
+          "detectedStack": "Expo + React Native (package.json dependencies expo/react-native)",
+          "selectedAuditors": [
+            "orion-architecture",
+            "orion-quality",
+            "orion-security",
+            "orion-frontend",
+            "orion-engineering-experience"
+          ],
+          "auditorDisposition": {
+            "orion-observability": "quando aplicável (não detectado sinal de fila/worker nesta fixture)",
+            "orion-platform": "quando aplicável (sem Dockerfile/CI nesta fixture — N/A)"
+          }
+        },
+        "static-tool-demo": {
+          "profile": "static-tool",
+          "detectedStack": "HTML/CSS/JS estático, sem framework, sem backend",
+          "selectedAuditors": [
+            "orion-quality",
+            "orion-security",
+            "orion-frontend",
+            "orion-engineering-experience"
+          ],
+          "auditorDisposition": {
+            "orion-architecture": "quando aplicável (sem módulos/boundaries de backend — N/A nesta fixture)",
+            "orion-observability": "N/A (sem backend/processo de longa duração)",
+            "orion-platform": "quando aplicável (CI) — N/A nesta fixture (sem workflow encontrado)"
+          }
+        }
+      },
+      "conclusion": "Seleção de auditores difere corretamente por profile: backend-api nunca roda orion-frontend; mobile-app-demo e static-tool-demo rodam orion-frontend porque têm UI cliente; nenhum profile roda um auditor 'porque existe' sem sinal de aplicabilidade."
+    }
+  ],
+  "runtimeCompatibility": {
+    "claudeCode": "NÃO VALIDADO NESTE AMBIENTE",
+    "codexCli": "NÃO VALIDADO NESTE AMBIENTE",
+    "notes": "claude CLI está presente no container mas retorna 'claude is not enabled in this environment' para claude -p; codex CLI não está instalado no dispositivo vinculado. Os cenários acima foram produzidos por aplicação direta e determinística do contrato de cada SKILL.md nesta sessão, não por execução independente de um runtime de agente. Nenhum resultado de runtime foi simulado como PASS."
+  },
+  "htmlReport": "homologation-report.html"
+}

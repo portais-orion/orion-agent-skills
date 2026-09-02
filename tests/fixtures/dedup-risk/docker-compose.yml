@@ -1,0 +1,4 @@
+services:
+  admin:
+    image: dedup-fixture/admin:latest
+    ports: ["9000:9000"]

@@ -1,0 +1,21 @@
+schema_version: 1
+descricao: Contrato canônico de regra Orion para agentes, CI e detectores.
+required: [id, title, category, level, severity, applies_when, detect, exceptions, references]
+properties:
+  id: { pattern: '^ORION-[A-Z0-9]+-[0-9]{3}$' }
+  title: { type: string }
+  category: { enum: [architecture, quality, security, observability, platform, frontend, engineering_experience] }
+  level: { enum: [REQUIRED, RECOMMENDED, OPTIONAL, CONTEXTUAL, FORBIDDEN] }
+  severity: { enum: [CRITICAL, HIGH, MEDIUM, LOW, OPPORTUNITY] }
+  priority: { enum: [P0, P1, P2, P3, P4] }
+  applies_when: { type: array, items: string }
+  detect:
+    required: [automatic, detector]
+    automatic: { enum: [YES, PARTIAL, NO] }
+    detector: { type: string }
+  exceptions:
+    required: [allowed, requires_adr, expiry_required]
+    allowed: { type: boolean }
+    requires_adr: { type: boolean }
+    expiry_required: { type: boolean }
+  references: { type: array, items: string }

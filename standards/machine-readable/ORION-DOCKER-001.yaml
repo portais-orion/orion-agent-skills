@@ -1,0 +1,10 @@
+schema_version: 1
+id: ORION-DOCKER-001
+title: Executar perfil containerizado com imagem e rede seguras
+category: platform
+level: CONTEXTUAL
+severity: HIGH
+applies_when: [Docker, Compose, container]
+detect: { automatic: PARTIAL, detector: docker-compose-exposure-policy }
+exceptions: { allowed: true, requires_adr: true, expiry_required: true }
+references: [https://csrc.nist.gov/pubs/sp/800/218/final]

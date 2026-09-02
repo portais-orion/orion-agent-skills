@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+const root = new URL('..', import.meta.url).pathname;
+const skill = (name) => readFileSync(join(root, 'skills/orion', name, 'SKILL.md'), 'utf8');
+const orchestrator = skill('audit-orion-codebase');
+const auditors = ['orion-architecture', 'orion-quality', 'orion-security', 'orion-observability', 'orion-platform', 'orion-frontend', 'orion-engineering-experience'];
+for (const name of auditors) assert.match(orchestrator, new RegExp(`\\b${name}\\b`));
+assert.equal((orchestrator.match(/orion-(architecture|quality|security|observability|platform|frontend|engineering-experience)/g) ?? []).length >= 7, true);
+assert.match(orchestrator, /[Rr]ead-only/);
+assert.match(orchestrator, /Tabela de Dispatch/, 'orquestradora deve declarar dispatch condicional por profile');
+assert.match(orchestrator, /backend-api[\s\S]{0,400}N\/A/, 'dispatch deve marcar N/A para orion-frontend em backend-api');
+assert.match(skill('orion-security'), /standardId: ORION-SEC-001/);
+assert.match(skill('orion-security'), /SIGLA-SEC-001/);
+assert.doesNotMatch(skill('orion-security'), /\bSF-SEC-\d{3}\b/, 'orion-security não deve exemplificar com Finding ID histórico real');
+assert.match(skill('orion-platform'), /ORION-DOCKER-001/);
+assert.match(skill('orion-platform'), /ORION-CI-001/);
+assert.match(skill('orion-frontend'), /backend-only/);
+assert.match(skill('orion-engineering-experience'), /não transformar ausência de documentação em finding técnico duplicado/);
+console.log('Cenários funcionais declarados: OK');

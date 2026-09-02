@@ -1,0 +1,10 @@
+schema_version: 1
+id: ORION-CI-001
+title: Executar gates de qualidade e segurança antes de promover mudança protegida
+category: platform
+level: REQUIRED
+severity: HIGH
+applies_when: [release, deploy, publicação de pacote]
+detect: { automatic: YES, detector: workflow-policy }
+exceptions: { allowed: true, requires_adr: true, expiry_required: true }
+references: [https://csrc.nist.gov/pubs/sp/800/218/final]

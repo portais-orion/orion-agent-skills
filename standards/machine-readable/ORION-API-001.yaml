@@ -1,0 +1,10 @@
+schema_version: 1
+id: ORION-API-001
+title: Manter contrato de API validado, evolutivo e documentado com segurança
+category: architecture
+level: CONTEXTUAL
+severity: MEDIUM
+applies_when: [API de rede]
+detect: { automatic: PARTIAL, detector: api-contract-docs-policy }
+exceptions: { allowed: true, requires_adr: true, expiry_required: true }
+references: [https://owasp.org/www-project-application-security-verification-standard/]

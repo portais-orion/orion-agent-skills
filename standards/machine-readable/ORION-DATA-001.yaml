@@ -1,0 +1,10 @@
+schema_version: 1
+id: ORION-DATA-001
+title: Versionar e tornar obrigatória toda alteração de schema persistente
+category: architecture
+level: REQUIRED
+severity: HIGH
+applies_when: [banco de dados persistente]
+detect: { automatic: PARTIAL, detector: migration-pipeline-policy }
+exceptions: { allowed: true, requires_adr: true, expiry_required: true }
+references: [https://csrc.nist.gov/pubs/sp/800/218/final]

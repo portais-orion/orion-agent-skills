@@ -1,0 +1,10 @@
+schema_version: 1
+id: ORION-CI-002
+title: Documentar gate de CI nascido de incidente real como teste de regressão permanente
+category: platform
+level: RECOMMENDED
+severity: HIGH
+applies_when: [repositório com CI, repositório com workflow de deploy]
+detect: { automatic: YES, detector: workflow-graph-deploy-depends-on-ci }
+exceptions: { allowed: false, requires_adr: true, expiry_required: true }
+references: []
