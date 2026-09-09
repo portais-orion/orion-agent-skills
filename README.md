@@ -34,7 +34,7 @@ As skills não repetem texto de regra. Consultam `standards/engineering/` e `sta
 Instalador Orion, recomendado:
 
 ```bash
-npx @portais-orion/skills@latest
+npx @skills-portais-orion/skills@latest
 ```
 
 Teste local/discovery:

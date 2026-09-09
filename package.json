@@ -1,0 +1,24 @@
+{
+  "name": "@skills-portais-orion/skills",
+  "version": "1.0.0",
+  "description": "Biblioteca Orion de conhecimento técnico reutilizável",
+  "bin": {
+    "skills": "bin/install.js"
+  },
+  "scripts": {
+    "test": "node tests/orion-library-contract.test.mjs"
+  },
+  "files": [
+    "skills",
+    "standards",
+    "bin",
+    "README.md",
+    "CLAUDE.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Orion",
+  "license": "UNLICENSED"
+}
+
