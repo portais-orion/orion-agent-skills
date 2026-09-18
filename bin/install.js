@@ -2,27 +2,31 @@
 
 const { execSync } = require('child_process');
 const path = require('path');
-const readline = require('readline');
 
-const packageDir = path.resolve(__dirname, '..');
-const args = process.argv.slice(2);
-const argsString = args.join(' ');
-
-function run(isGlobal) {
+function buildInstallCommand(packageDir, rawArgs = []) {
+  const hasGlobalFlag = rawArgs.includes('-g') || rawArgs.includes('--global');
+  const filteredArgs = rawArgs.filter(arg => arg !== '-g' && arg !== '--global');
   let cmd = `npx skills@latest add "${packageDir}"`;
-  
-  if (isGlobal && !args.includes('-g') && !args.includes('--global')) {
-    cmd += ' -g';
+
+  if (filteredArgs.length > 0) {
+    cmd += ` ${filteredArgs.join(' ')}`;
   }
-  
-  if (argsString.trim().length > 0) {
-    cmd += ` ${argsString}`;
-  } else {
-    // Se o usuário não passar argumentos, abrimos o modo interativo por padrão
-    cmd += ` --list`;
+
+  return { cmd, hasGlobalFlag, filteredArgs };
+}
+
+if (require.main === module) {
+  const packageDir = path.resolve(__dirname, '..');
+  const rawArgs = process.argv.slice(2);
+  const { cmd, hasGlobalFlag } = buildInstallCommand(packageDir, rawArgs);
+
+  console.log('\n🌟 Instalador Orion Agent Skills');
+  if (hasGlobalFlag) {
+    console.log('⚠️  Aviso: Instalação global desativada. As skills Orion são instaladas exclusivamente no escopo local do projeto.');
   }
-  
-  console.log(`\n> Executando: ${cmd}\n`);
+  console.log(`📁 Instalando localmente no projeto: ${process.cwd()}\n`);
+  console.log(`> Executando: ${cmd}\n`);
+
   try {
     execSync(cmd, { stdio: 'inherit' });
   } catch (error) {
@@ -30,21 +34,4 @@ function run(isGlobal) {
   }
 }
 
-// Pula a pergunta caso esteja automatizando (-y, --yes) ou já tenha pedido global explicito
-if (args.includes('-y') || args.includes('--yes') || args.includes('-g') || args.includes('--global')) {
-  run(args.includes('-g') || args.includes('--global'));
-} else {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
-
-  console.log('\n🌟 Instalador Orion Agent Skills');
-  console.log('💡 Recomendamos a instalação LOCAL para que as regras sejam commitadas no repositório do projeto e fiquem padronizadas para todo o time.\n');
-  
-  rl.question('Deseja instalar (L)ocalmente ou (G)lobalmente? [L/g]: ', (answer) => {
-    rl.close();
-    const isGlobal = answer.trim().toLowerCase() === 'g';
-    run(isGlobal);
-  });
-}
+module.exports = { buildInstallCommand };

@@ -95,14 +95,14 @@ Each skill folder's name is always identical to its `SKILL.md` frontmatter `name
 
 ## Installation (for context — not something you run when editing this repo)
 
-Via the group installer (bundles this repo with Matt Pocock's and Superpowers skills):
+Via the group installer (installs locally to the target project):
 
 ```bash
-npx @portais-orion/skills@latest
+npx @skills-portais-orion/skills@latest
 ```
 
-Or standalone, via the official Agent Skills CLI:
+Or standalone, via the official Agent Skills CLI (local to target project):
 
 ```bash
-npx skills@latest add portais-orion/orion-agent-skills --skill '*' --global --agent claude-code --agent codex --yes
+npx skills@latest add portais-orion/orion-agent-skills --skill '*' --agent claude-code --agent codex --yes
 ```

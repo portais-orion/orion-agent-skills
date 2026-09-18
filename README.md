@@ -14,17 +14,16 @@ Contém duas camadas complementares:
 
 ## 📦 Como Instalar (Uso pela equipe)
 
-Recomendamos sempre a instalação **Local** (na raiz do repositório do seu projeto). Assim, toda a sua equipe compartilhará as mesmas regras e os agentes terão contexto comum via Git.
+A instalação é **exclusivamente Local** (na raiz do repositório do seu projeto). Assim, toda a sua equipe compartilha as mesmas regras no repositório e os agentes trabalham com o mesmo contexto versionado via Git (sem poluir o ambiente global).
 
-Vá para a pasta raiz do seu projeto e execute o instalador interativo:
+Vá para a pasta raiz do seu projeto e execute o instalador:
 
 ```bash
 npx @skills-portais-orion/skills@latest
 ```
 
-O instalador vai abrir um assistente no terminal perguntando:
-1. Se deseja instalar localmente (recomendado) ou globalmente.
-2. Quais skills você deseja adicionar (use as setinhas do teclado e barra de espaço para selecionar).
+O instalador detecta o projeto atual e abre o assistente para:
+- Escolher quais skills você deseja adicionar (use as setinhas do teclado e barra de espaço para selecionar).
 
 ### Atalhos e Instalação Automatizada
 

@@ -6,7 +6,7 @@
     "skills": "bin/install.js"
   },
   "scripts": {
-    "test": "node tests/orion-library-contract.test.mjs"
+    "test": "node tests/orion-library-contract.test.mjs && node tests/functional-contract.test.mjs && node tests/installer.test.mjs"
   },
   "files": [
     "skills",
