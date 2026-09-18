@@ -1,6 +1,6 @@
 {
   "name": "@skills-portais-orion/skills",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Biblioteca Orion de conhecimento técnico reutilizável",
   "bin": {
     "skills": "bin/install.js"
