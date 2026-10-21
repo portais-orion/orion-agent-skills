@@ -88,7 +88,7 @@ skills/
 ├── frontend/
 │   └── nextjs-app-router-patterns/     Next.js App Router page/route conventions
 ├── mobile/                             Expo/RN quality, mobile security baseline, idempotent critical mutations
-└── platform/                           pre-deploy gate, observability (OTEL+LGTM), feature flags (GrowthBook), multi-agent orchestration, knowledge-graph-first navigation
+└── platform/                           pre-deploy gate, observability (OTEL+LGTM), feature flags (GrowthBook), multi-agent orchestration (feature lifecycle + full agent-orchestration setup with HTML report), knowledge-graph-first navigation
 ```
 
 Each skill folder's name is always identical to its `SKILL.md` frontmatter `name`.
